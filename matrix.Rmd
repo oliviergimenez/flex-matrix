@@ -1,0 +1,62 @@
+---
+title: "modèle lynx 2 classes d'âge"
+output: 
+  flexdashboard::flex_dashboard:
+  runtime: shiny
+---
+
+```{r global, include=FALSE}
+library(popbio)
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+Paramètres du modèle matriciel
+
+```{r}
+# fecondite
+selectInput("fec", label = "fec :",
+            choices = c(1, 2, 3), selected = 2)
+
+# proportion de reproducteurs
+sliderInput("alpha", label = "prop reprod :",
+            min = 0.6, max = 0.9, value = 0.84, step = 0.01)
+
+# horizon
+sliderInput("steps", label = "horizon :",
+            min = 10, max = 100, value = 30, step = 10)
+
+# survie kitten
+sk <- 0.5
+
+# survie des dispersant de 1 an
+sd <- 0.65
+
+# survie des reproducteurs
+sr <- 0.81
+
+# sex ratio
+sigma <- 0.5
+
+# inits
+N0 <- c(10, 0)
+
+```
+
+Column
+-----------------------------------------------------------------------
+
+### Projection
+
+```{r}
+renderPlot({
+  les.mat <- matrix(c(0, input$alpha * as.numeric(input$fec) * sigma * sk,
+                      sd,  sr), ncol = 2, byrow = T)
+  projA <- pop.projection(A = les.mat, n = N0, iterations = input$steps)
+  plot(1:input$steps, projA$pop.sizes, 
+       xlab = "années", 
+       ylab = "effectif total",
+       type = 'l')
+})
+```
