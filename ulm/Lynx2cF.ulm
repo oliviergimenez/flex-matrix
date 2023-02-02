@@ -1,0 +1,38 @@
+{ Matrice Lynx, prebreeding
+{Deux classes cycle femelle,
+
+defmod lynx(2)
+mat : a
+vec : v
+
+defvec v(2)
+nd, nr
+
+defmat a(2)
+ 0,   alpha*f*sigma*sk
+ sd,  sr
+
+defvar nd = 10
+
+defvar nr = 0
+
+defvar nt = nd + nr
+
+{ survie kitten
+defvar sk = 0.5
+
+{survie des dispersant de 1 an
+defvar sd = 0.65
+
+{ survie des reproducteurs
+defvar sr = 0.81
+
+{ proportion de reproducteurs
+defvar alpha  = 0.84
+
+{ fecundite
+defvar f = 2
+
+{ sex ratio
+defvar sigma = 0.5
+

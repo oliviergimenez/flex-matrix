@@ -1,0 +1,138 @@
+{ Modele Lynx "reintro"
+{ deux sexes, trois classes par sexe D1 D2 R
+{stochasticité demographique
+{ population fondée par reintroduction (ici de Reproducteurs mais totalement adaptable)
+
+
+defmod lynxsd(6)
+rel: fd1,fd2,fr,md1,md2,mr
+
+{relations femelles
+defrel fd1
+nfd1 = binomf(nfK, sk) + lfd1
+
+defrel fd2
+nfd2 = binomf(nsfd1, 1-tfd1r) + binomf(nsfd2, 1-tfd2r) + binomf(nsfr, tfrd2) + lfd2
+
+defrel fr
+nfr = binomf(nsfd1, tfd1r) + binomf(nsfd2, tfd2r) + binomf(nsfr, 1-tfrd2) + lfr
+
+{relations males
+defrel md1
+nmd1 = binomf(nmK, sk) + lmd1
+
+defrel md2
+nmd2 = binomf(nsmd1, 1-tmd1r) + binomf(nsmd2, 1-tmd2r) +binomf(nsmr, tmrd2) + lmd2
+
+defrel mr
+nmr = binomf(nsmd1, tmd1r) + binomf(nsmd2, tmd2r) + binomf(nsmr, 1-tmrd2) + lmr
+
+{effectifs femelles lachées
+defvar lfd1 = 0
+
+defvar lfd2 = 0
+
+defvar lfr = if(t<10,2, 0)
+
+defvar nlf = lfd1 + lfd2 + lfr
+
+{effectifs males lachés                            
+defvar lmd1 = 0
+
+defvar lmd2 = 0
+
+defvar lmr = if(t<10, 2, 0)
+
+defvar nlm = lmd1 + lmd2 + lmr
+
+{effectifs initiaux de femelles 
+defvar nfd1 = 0
+
+defvar nfd2 = 0
+
+defvar nfr = 0
+
+{effectifs initiaux de males                             
+defvar nmd1 = 0
+
+defvar nmd2 = 0
+
+defvar nmr = 0
+
+defvar nf = nfd1 + nfd2 + nfr
+
+defvar nm = nmd1 + nmd2 + nmr
+
+defvar nt = nm + nf
+
+{survie kitten
+defvar sk = 0.5
+
+{survie des dispersant de 1 an
+defvar sd1f = 0.65
+
+defvar sd1m = 0.65
+
+defvar nsfd1 = binomf(nfd1, sd1f)
+
+defvar nsmd1 = binomf(nmd1, sd1m)
+
+{survie des dispersant de 2 an et plus
+defvar sd2f = 0.65
+
+defvar sd2m = 0.65
+
+defvar nsfd2 = binomf(nfd2, sd2f)
+
+defvar nsmd2 = binomf(nmd2, sd2m)
+
+{survie des reproducteurs
+defvar srf = 0.81
+
+defvar srm = 0.81
+
+defvar nsfr = binomf(nfr, srf)
+
+defvar nsmr = binomf(nmr, srm)
+
+{proportion de reproducteurs
+defvar alpham  = 0.86
+
+defvar alphaf = 0.86
+
+defvar nsfrr = binomf(nsfr, alphaf)
+
+defvar nsmrr = binomf(nsmr, alpham)
+
+{nombre d'appariements suivant taille de "harem"
+defvar nc = min(nsmrr*h, nsfrr)
+
+defvar h = 3
+
+{fecundite et nombre de kittens produits
+defvar f = 2
+
+defvar nk = poissonf(nc, f)
+
+{sex ratio
+defvar sigma = 0.5
+
+defvar nfk = binomf(nk, sigma)
+
+defvar nmk = nk-nfk
+
+{transition de dispersant d'un an a reproducteur
+defvar tfd1r = 0.95
+
+defvar tmd1r = 0.05
+
+{transition de dispersant de deux ans et plus a reproducteur
+defvar tfd2r = 0.95
+
+defvar tmd2r = 0.95
+
+{transition de reproducteur a dispersant de deux ans et plus
+defvar tfrd2 = 0.05
+
+defvar tmrd2 = 0.1
+
