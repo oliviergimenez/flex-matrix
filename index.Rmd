@@ -2,7 +2,7 @@
 title: "modèle lynx 2 classes d'âge"
 output: 
   flexdashboard::flex_dashboard:
-  runtime: shiny
+  runtime: shiny_prerendered
 ---
 
 ```{r global, include=FALSE}
